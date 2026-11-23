@@ -38,31 +38,6 @@ jobs:
           sdkmanager "ndk;27.2.12479018"
           echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/27.2.12479018" >> "$GITHUB_ENV"
 
-      - name: Apply ARM compatibility fix
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-
-          p = Path("ggml/src/ggml-cpu/ggml-cpu-impl.h")
-          s = p.read_text()
-
-          start = s.find(
-              "inline static int32x4_t vcvtnq_s32_f32(float32x4_t v) {"
-          )
-
-          if start < 0:
-              raise SystemExit("Compatibility function not found")
-
-          end = s.find("\n}\n", start)
-
-          if end < 0:
-              raise SystemExit("Function end not found")
-
-          p.write_text(s[:start] + s[end+3:])
-          print("ARM compatibility fix applied")
-
-          PY
-
       - name: Configure ARMv7-A
         run: |
           cmake -S . -B build-android -G Ninja \
@@ -97,4 +72,4 @@ jobs:
           name: llama-android-armv7a
           path: llama-android-armv7a.zip
           retention-days: 7
-          
+

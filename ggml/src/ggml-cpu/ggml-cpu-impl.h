@@ -130,14 +130,13 @@ inline static float vmaxvq_f32(float32x4_t v) {
 }
 
 inline static int32x4_t vcvtnq_s32_f32(float32x4_t v) {
-    int32x4_t res;
-
-    res[0] = roundf(vgetq_lane_f32(v, 0));
-    res[1] = roundf(vgetq_lane_f32(v, 1));
-    res[2] = roundf(vgetq_lane_f32(v, 2));
-    res[3] = roundf(vgetq_lane_f32(v, 3));
-
-    return res;
+    const int32_t res[4] = {
+        (int32_t) roundf(vgetq_lane_f32(v, 0)),
+        (int32_t) roundf(vgetq_lane_f32(v, 1)),
+        (int32_t) roundf(vgetq_lane_f32(v, 2)),
+        (int32_t) roundf(vgetq_lane_f32(v, 3)),
+    };
+    return vld1q_s32(res);
 }
 
 inline static uint8x8_t vzip1_u8(uint8x8_t a, uint8x8_t b) {
