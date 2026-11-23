@@ -8,7 +8,7 @@ on:
       - ".github/workflows/android-armv7.yml"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -72,4 +72,14 @@ jobs:
           name: llama-android-armv7a
           path: llama-android-armv7a.zip
           retention-days: 7
+
+      - name: Publish downloadable ARMv7-A release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: armv7-latest
+          name: llama.cpp Android ARMv7-A (latest)
+          body: Automated ARMv7-A Android build for Termux-compatible ARM devices.
+          files: llama-android-armv7a.zip
+          overwrite_files: true
+          make_latest: false
 
